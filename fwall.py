@@ -81,15 +81,14 @@ def parseHTTTPPacket(payload):
     return False
     
 
-    
-
 
 #  Capture only TCP packets to port 80, i.e. HTTP requests.
 print("Intercepting Packets at dstPort 80")
 
 with pydivert.WinDivert("tcp.DstPort == 80 and tcp.PayloadLength > 0") as w:
     for packet in w:
-        print(parseHTTTPPacket(packet.payload))
-        print("******************")     
-        w.send(packet)
+        result = parseHTTTPPacket(packet.payload) 
+        print(result)    
+        if not result:
+            w.send(packet)
 #
